@@ -28,9 +28,7 @@ const App = () =>
   }
   return (
     <div>
-      {anecdotes.map((anecdote, id) => (
-        <p key={id}>{anecdote}</p>
-      ))}
+
       <button onClick={handleAnecdoteClick}>Next Anecdote</button>
     </div>
   )
