@@ -1,11 +1,4 @@
-import React, { useState } from "react";
-
-
-
-const shuffle = () =>
-{
-  Math.random() - 0.5
-}
+import React, { useState } from 'react';
 
 const App = () =>
 {
@@ -17,21 +10,54 @@ const App = () =>
     'Premature optimization is the root of all evil.',
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
-    'The only way to go fast, is to go well.'
-  ]
+    'The only way to go fast is to go well.'
+  ];
 
-  const [selected, setSelected] = useState(0)
-  const handleAnecdoteClick = () =>
+  const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
+
+  const handleNextAnecdote = () =>
   {
-    const arrayIndex = Math.floor(Math.random() * anecdotes.length)
-    setSelected(arrayIndex)
-  }
+    const randomIndex = Math.floor(Math.random() * anecdotes.length);
+    setSelected(randomIndex);
+  };
+
+  const handleVote = () =>
+  {
+    const newVotes = [...votes];
+    newVotes[selected] += 1;
+    setVotes(newVotes);
+  };
+
+  // Find the index (or indices) of the anecdote(s) with the highest votes
+  const maxVotes = Math.max(...votes);
+  const highestVoteIndices = votes.reduce(
+    (acc, vote, index) => (vote === maxVotes ? [...acc, index] : acc),
+    []
+  );
+
   return (
     <div>
-
-      <button onClick={handleAnecdoteClick}>Next Anecdote</button>
+      <div>
+        <h2>Anecdote of the Day</h2>
+        {anecdotes[selected]}
+        <p>Votes: {votes[selected]}</p>
+        <button onClick={handleVote}>Vote</button>
+        <button onClick={handleNextAnecdote}>Next Anecdote</button>
+      </div>
+      {maxVotes > 0 && (
+        <div>
+          <h2>Anecdote(s) with most vote(s)</h2>
+          {highestVoteIndices.map((index) => (
+            <div key={index}>
+              {anecdotes[index]}
+              <p>Votes: {votes[index]}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
 export default App;
